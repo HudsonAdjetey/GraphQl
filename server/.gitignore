@@ -1,0 +1,6 @@
+# env files
+.env
+.envrc
+
+# node modules
+node_modules

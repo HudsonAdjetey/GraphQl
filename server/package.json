@@ -3,10 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server",
+    "start": "node server",
+    "concurrently": "concurrently \"npm run dev\" \"npm run start:server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HudsonAdjetey/GraphQl"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "graphql": "^16.9.0",
+    "nodemon": "^3.1.4"
+  }
 }
