@@ -6,7 +6,7 @@ const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
 const { createSchema, createYoga } = require("graphql-yoga");
 const schema = require("./schema/schema");
-
+ require("colors")
 const app = express();
 
 app.use(express.json());
