@@ -24,6 +24,15 @@ var handler = createHandler({ schema, rootValue, graphiql: true });
 
 app.use("/graphql", handler);
 
+app.get("/", (req, res) => {
+  res.type("html");
+  res.end(
+    ruruHtml({
+      endpoint: "/graphql",
+    })
+  );
+});
+
 run()
   .then(() => {
     app.listen(process.env.PORT, () => {
