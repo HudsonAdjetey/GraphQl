@@ -12,13 +12,18 @@ app.use(express.json());
 var schema = buildSchema(`
   type Query {
     hello: String,
-    age: Int!
+    age: Int!,
+    hobbies: [String]!
   }
 `);
 
 // with the ! makes it strict not optional
 
-var rootValue = { hello: () => "Hello world!", age: 23 };
+var rootValue = {
+  hello: () => "Hello world!",
+  age: 23,
+  hobbies: ["Carting", "Reading", "Fishing", "Dancing"],
+};
 
 var source = "{ hello, age }";
 
@@ -28,6 +33,7 @@ app.use("/graphql", handler);
 
 app.get("/", (req, res) => {
   res.type("html");
+  console.log(res);
   res.end(
     ruruHTML({
       endpoint: "/graphql",
