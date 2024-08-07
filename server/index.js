@@ -135,3 +135,121 @@ run()
   .catch((error) => {
     console.error("Error connecting to the database", error);
   });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// graph ql
+const {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLString,
+  GraphQLSchema,
+  GraphQLList,
+  GraphQLNonNull,
+} = require("graphql");
+
+
+  const ProjectModel = require("../model/Project");
+  const ClientModel = require("../model/Client");
+
+  // Client Type
+  const ClientType = new GraphQLObjectType({
+    name: "Client",
+    fields: () => ({
+      id: { type: GraphQLID },
+      name: { type: GraphQLString },
+      email: { type: GraphQLString },
+      phone: { type: GraphQLString },
+    }),
+  });
+
+  // Project Type
+  const ProjectType = new GraphQLObjectType({
+    name: "Project",
+    fields: () => ({
+      id: { type: GraphQLID },
+      name: { type: GraphQLString },
+      description: { type: GraphQLString },
+      status: { type: GraphQLString },
+      client: {
+        type: ClientType,
+        async resolve(parent, args) {
+          return await ClientModel.findById(parent.clientId);
+        },
+      },
+    }),
+  });
+
+  // Root Query
+  const RootQuery = new GraphQLObjectType({
+    name: "RootQueryType",
+    fields: {
+      projects: {
+        type: new GraphQLList(ProjectType),
+        async resolve() {
+          return await ProjectModel.find();
+        },
+      },
+      project: {
+        type: ProjectType,
+        args: { id: { type: GraphQLID } },
+        async resolve(parent, args) {
+          return await ProjectModel.findById(args.id);
+        },
+      },
+      clients: {
+        type: new GraphQLList(ClientType),
+        async resolve() {
+          return await ClientModel.find();
+        },
+      },
+      client: {
+        type: ClientType,
+        args: { id: { type: GraphQLID } },
+        async resolve(parent, args) {
+          return await ClientModel.findById(args.id);
+        },
+      },
+    },
+  });
+
+  // Mutations
+  const Mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+      addClient: {
+        type: ClientType,
+        args: {
+          name: { type: new GraphQLNonNull(GraphQLString) },
+          email: { type: new GraphQLNonNull(GraphQLString) },
+          phone: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(parent, args) {
+          const newClient = new ClientModel({
+            name: args.name,
+            email: args.email,
+            phone: args.phone,
+          });
+          return await newClient.save();
+        },
+      },
+    },
+  });
+
+  module.exports = new GraphQLSchema({
+    query: RootQuery,
+    mutation: Mutation,
+  });

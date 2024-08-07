@@ -14,6 +14,6 @@ const projectSchema = new Schema({
   // projects: [{ type: Schema.Types.ObjectId, ref: "Project" }]
 });
 
-const ProjectModel = model("Project", projectSchema);
+const ProjectModel = model("project", projectSchema);
 
 module.exports = ProjectModel;

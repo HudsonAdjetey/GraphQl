@@ -7,6 +7,6 @@ const clientSchema = new Schema({
   // projects: [{ type: Schema.Types.ObjectId, ref: "Project" }]
 });
 
-const ClientModel = model("Client", clientSchema);
+const ClientModel = model("client", clientSchema);
 
 module.exports = ClientModel;
