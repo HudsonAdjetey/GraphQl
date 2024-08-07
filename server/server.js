@@ -40,6 +40,14 @@ app.use(express.json());
 
 // with the ! makes it strict not optional
 
+const User = new GraphQLObjectType({
+  name: "User",
+  fields: {
+    id: { type: GraphQLInt },
+    name: { type: GraphQLString },
+  },
+});
+
 const schema = new GraphQLSchema({
   // query type
   query: new GraphQLObjectType({
@@ -52,56 +60,17 @@ const schema = new GraphQLSchema({
           return `Hello ${username}!`;
         },
       },
-      // user
       users: {
-        type: new GraphQLList(require("./userType")),
+        type: User,
         resolve: () => {
-          return run.query("SELECT * FROM users");
+          return {
+            id: 1,
+            name: "John Doe",
+          };
         },
       },
     },
   }),
-  // users type
-  users: {
-    type: new GraphQLObjectType({
-      name: "User",
-      fields: {
-        id: {
-          type: GraphQLID,
-        },
-        name: { type: GraphQLString },
-        posts: {
-          type: new GraphQLList(require("./postType")),
-          resolve: (parent, args) => {
-            return run.query("SELECT * FROM posts WHERE user_id =?", [
-              parent.id,
-            ]);
-          },
-        },
-      },
-    }),
-  },
-  // posts type
-  posts: {
-    type: new GraphQLObjectType({
-      name: "Posts",
-      fields: {
-        id: {
-          type: GraphQLID,
-        },
-        title: { type: GraphQLString },
-        content: { type: GraphQLString },
-        user: {
-          type: require("./userType"),
-          resolve: (parent, args) => {
-            return run.query("SELECT * FROM users WHERE id =?", [
-              parent.user_id,
-            ]);
-          },
-        },
-      },
-    }),
-  },
 });
 
 var rootValue = {
