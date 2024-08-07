@@ -1,4 +1,10 @@
+require("dotenv").config();
+const express = require("express");
 var { graphql, buildSchema } = require("graphql");
+const run = require("./config/dbConfig");
+
+const app = express();
+
 
 var schema = buildSchema(`
   type Query {
