@@ -14,24 +14,17 @@ const run = require("./config/dbConfig");
 const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
 const { createSchema, createYoga } = require("graphql-yoga");
+const schema = require("./schema/schema");
+
 const app = express();
 
 app.use(express.json());
 
-const yoga = createYoga({
-  schema: createSchema({
-    typeDefs: `
-        type Query {
-            hello: String
-        }`,
-    resolvers: {
-      Query: {
-        hello: () => "Hello, World!",
-      },
-    },
-  }),
+var handler = createHandler({
+  schema,
+  graphiql: process.env.NODE_ENV === "development",
 });
-app.use("/graphql", yoga);
+app.use("/graphql", handler);
 
 app.get("/", (req, res) => {
   res.type("html");
