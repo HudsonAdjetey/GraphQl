@@ -19,9 +19,26 @@ const ClientType = new GraphQLObjectType({
   }),
 });
 
+// set up a project type
+const ProjectType = new GraphQLObjectType({
+  name: "Project",
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    status: { type: GraphQLString },
+  }),
+});
+
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
+    projects: {
+      type: new GraphQLList(ProjectType),
+      resolve() {
+        return projects;
+      },
+    },
     clients: {
       type: new GraphQLList(ClientType),
       resolve() {
