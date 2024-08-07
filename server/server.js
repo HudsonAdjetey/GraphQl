@@ -1,6 +1,15 @@
 require("dotenv").config();
 const express = require("express");
-var { graphql, buildSchema, GraphQLSchema, GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString } = require("graphql");
+var {
+  graphql,
+  buildSchema,
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLString,
+  GraphQLID,
+} = require("graphql");
 const run = require("./config/dbConfig");
 const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
@@ -32,27 +41,68 @@ app.use(express.json());
 // with the ! makes it strict not optional
 
 const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-        name: "RootQueryType",
-        fields: {
-            hello: {
-                type: GraphQLString,
-                args: { username: { type: GraphQLString } },
-                resolve: (parent, args) => "Hello " + args.username,
-            },
-            age: {
-                type: GraphQLInt,
-                resolve: (parent, args) => 23,
-            },
-            hobbies: {
-                type: new Gr(GraphQLString),
-                resolve: (parent, args) => ["Carting", "Reading", "Fishing", "Dancing"],
-            },
-        }
-                                
-    })
-})
-
+  // query type
+  query: new GraphQLObjectType({
+    name: "RootQueryType",
+    fields: {
+      hello: {
+        type: GraphQLString,
+        args: { username: { type: GraphQLString } },
+        resolve: (parent, { username }) => {
+          return `Hello ${username}!`;
+        },
+      },
+      // user
+      users: {
+        type: new GraphQLList(require("./userType")),
+        resolve: () => {
+          return run.query("SELECT * FROM users");
+        },
+      },
+    },
+  }),
+  // users type
+  users: {
+    type: new GraphQLObjectType({
+      name: "User",
+      fields: {
+        id: {
+          type: GraphQLID,
+        },
+        name: { type: GraphQLString },
+        posts: {
+          type: new GraphQLList(require("./postType")),
+          resolve: (parent, args) => {
+            return run.query("SELECT * FROM posts WHERE user_id =?", [
+              parent.id,
+            ]);
+          },
+        },
+      },
+    }),
+  },
+  // posts type
+  posts: {
+    type: new GraphQLObjectType({
+      name: "Posts",
+      fields: {
+        id: {
+          type: GraphQLID,
+        },
+        title: { type: GraphQLString },
+        content: { type: GraphQLString },
+        user: {
+          type: require("./userType"),
+          resolve: (parent, args) => {
+            return run.query("SELECT * FROM users WHERE id =?", [
+              parent.user_id,
+            ]);
+          },
+        },
+      },
+    }),
+  },
+});
 
 var rootValue = {
   hello: ({ username }) => "Hello " + username,
@@ -88,7 +138,7 @@ var rootValue = {
 
 var source = "{ hello, age }";
 
-var handler = createHandler({ schema, rootValue, graphiql: true });
+var handler = createHandler({ schema, graphiql: true });
 
 app.use("/graphql", handler);
 
