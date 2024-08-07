@@ -44,7 +44,12 @@ const User = new GraphQLObjectType({
   name: "User",
   fields: {
     id: { type: GraphQLInt },
-    name: { type: GraphQLString },
+    name: {
+      type: GraphQLString,
+      resolve: (obj) => {
+        return obj.name.split("").join(", ").trim();
+      },
+    },
   },
 });
 
