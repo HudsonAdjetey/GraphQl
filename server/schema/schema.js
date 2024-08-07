@@ -135,6 +135,45 @@ const mutation = new GraphQLObjectType({
         return newProject.save();
       },
     },
+
+    // delete project
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return ProjectModel.findByIdAndDelete(args.id);
+      },
+    },
+    // update project
+    updateProject: {
+      type: ProjectType,
+      args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: "ProjectStatus_update",
+            values: {
+              NOT_STARTED: { value: "Not Started" },
+              IN_PROGRESS: { value: "In Progress" },
+              COMPLETED: { value: "Completed" },
+            },
+          }),
+        },
+      },
+      resolve(parent, args) {
+        return ProjectModel.findByIdAndUpdate(
+          args.id,
+          {
+            $set: args,
+          },
+          { new: true }
+        );
+      },
+    },
   },
 });
 
