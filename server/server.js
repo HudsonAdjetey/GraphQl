@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 var { graphql, buildSchema } = require("graphql");
 const run = require("./config/dbConfig");
-const { createHandler } = require("graphql-http");
+const { createHandler } = require("graphql-http/lib/use/express");
+const { ruruHtml } = require("ruru");
 
 const app = express();
 
