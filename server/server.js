@@ -19,8 +19,14 @@ var schema = buildSchema(`
     type User {
     id: ID!,
     name: String!,
- 
+ posts: [Posts]
   },
+  type Posts {
+  id: ID!,
+  title: String!,
+  content: String!,
+  user: User!
+}
 `);
 
 // with the ! makes it strict not optional
@@ -33,6 +39,26 @@ var rootValue = {
     return {
       id: 1,
       name: "John Doe",
+      posts: [
+        {
+          id: 1,
+          title: "First Post",
+          content: "This is the first post",
+          user: {
+            id: 1,
+            name: "John Doe",
+          },
+        },
+        {
+          id: 2,
+          title: "Second Post",
+          content: "This is the second post",
+          user: {
+            id: 2,
+            name: "Hudson Doe",
+          },
+        },
+      ],
     };
   },
 };
