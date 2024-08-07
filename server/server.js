@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 var { graphql, buildSchema } = require("graphql");
 const run = require("./config/dbConfig");
+const { createHandler } = require("graphql-http");
 
 const app = express();
 
@@ -18,9 +19,9 @@ var rootValue = { hello: () => "Hello world!", age: 23 };
 
 var source = "{ hello, age }";
 
-graphql({ schema, source, rootValue }).then((response) => {
-  console.log(response);
-});
+var handler = createHandler({ schema, rootValue, graphiql: true });
+
+app.use("/graphql", handler);
 
 run()
   .then(() => {
