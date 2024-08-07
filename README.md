@@ -1,6 +1,8 @@
 # GraphQL, Node.js, and MongoDB Server Setup
 
-This guide provides a step-by-step walkthrough to set up a server using GraphQL, Node.js, and MongoDB. The combination of these technologies allows for efficient data querying, robust backend development, and scalable data storage.
+GraphQL is an open-source data query and manipulation language for APIs and a runtime for fulfilling queries with existing data.
+
+It is an alternative to a REST API, with some added benefits such as the ability to request the exact data that you want.
 
 ## Table of Contents
 
