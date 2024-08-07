@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-var { graphql, buildSchema } = require("graphql");
+var { graphql, buildSchema, GraphQLSchema, GraphQLObjectType, GraphQLInt, GraphQLList, GraphQLString } = require("graphql");
 const run = require("./config/dbConfig");
 const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
@@ -30,6 +30,29 @@ app.use(express.json());
 `); */
 
 // with the ! makes it strict not optional
+
+const schema = new GraphQLSchema({
+    query: new GraphQLObjectType({
+        name: "RootQueryType",
+        fields: {
+            hello: {
+                type: GraphQLString,
+                args: { username: { type: GraphQLString } },
+                resolve: (parent, args) => "Hello " + args.username,
+            },
+            age: {
+                type: GraphQLInt,
+                resolve: (parent, args) => 23,
+            },
+            hobbies: {
+                type: new Gr(GraphQLString),
+                resolve: (parent, args) => ["Carting", "Reading", "Fishing", "Dancing"],
+            },
+        }
+                                
+    })
+})
+
 
 var rootValue = {
   hello: ({ username }) => "Hello " + username,
