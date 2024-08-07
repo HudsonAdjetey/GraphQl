@@ -9,7 +9,7 @@ const app = express();
 
 app.use(express.json());
 
-var schema = buildSchema(`
+/* var schema = buildSchema(`
   type Query {
     hello(username: String!): String,
     age: Int!,
@@ -27,7 +27,7 @@ var schema = buildSchema(`
   content: String!,
   user: User!
 }
-`);
+`); */
 
 // with the ! makes it strict not optional
 
