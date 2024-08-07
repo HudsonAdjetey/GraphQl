@@ -168,7 +168,11 @@ const mutation = new GraphQLObjectType({
         return ProjectModel.findByIdAndUpdate(
           args.id,
           {
-            $set: args,
+            $set: {
+              name: args.name || parent.name,
+              description: args.description || parent.description,
+              status: args.status || parent.status,
+            },
           },
           { new: true }
         );
