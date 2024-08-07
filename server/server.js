@@ -12,9 +12,11 @@ app.use(express.json());
 var schema = buildSchema(`
   type Query {
     hello: String,
-    age: Int
+    age: Int!
   }
 `);
+
+// with the ! makes it strict not optional
 
 var rootValue = { hello: () => "Hello world!", age: 23 };
 
