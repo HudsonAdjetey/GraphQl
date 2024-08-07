@@ -1,15 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-var {
-  graphql,
-  buildSchema,
-  GraphQLSchema,
-  GraphQLObjectType,
-  GraphQLInt,
-  GraphQLList,
-  GraphQLString,
-  GraphQLID,
-} = require("graphql");
+
 const run = require("./config/dbConfig");
 const { createHandler } = require("graphql-http/lib/use/express");
 const { ruruHTML } = require("ruru/server");
@@ -28,7 +19,6 @@ app.use("/graphql", handler);
 
 app.get("/", (req, res) => {
   res.type("html");
-  console.log(res);
   res.end(
     ruruHTML({
       endpoint: "/graphql",
